@@ -1,5 +1,4 @@
-# Yalgaar C-Sharp
- SDK
+# Yalgaar C-Sharp SDK
 Create amazing realtime applications easily with Yalgaar .Net SDK
 
 ## Description
