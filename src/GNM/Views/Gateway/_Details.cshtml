@@ -3,19 +3,17 @@
     ViewBag.Title = "Gateway";
 }
 
-@*<div class="right_col" role="main">*@
-
-    <div class="x_panel">
-        <div class="x_title">
-            <div class="page-title">
-                <div class="title_left">
-                    <h3>
-                        Gateway Master
-                    </h3>
-                </div>
+<div class="x_panel">
+    <div class="x_title">
+        <div class="page-title">
+            <div class="title_left">
+                <h3>
+                    Gateway Master
+                </h3>
             </div>
         </div>
-        <div class="clearfix"></div>
+    </div>
+    <div class="clearfix"></div>
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
     @using (Html.BeginForm("AddEditGateway", "Gateway"))
     {
@@ -52,13 +50,13 @@
             </div>
         </div>
     }
-    </div>
-    @*    </div>*@
-    @section scripts {
-        <script type="text/javascript">
-            $('#btnCancel').click(function () {
-                window.location.href = "/Gateway/Index";
-            });
+</div>
+@*    </div>*@
+@section scripts {
+    <script type="text/javascript">
+        $('#btnCancel').click(function () {
+            window.location.href = "/Gateway/Index";
+        });
 
-        </script>
-    }
+    </script>
+}
