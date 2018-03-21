@@ -1,0 +1,58 @@
+﻿@model GNM.Models.User
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Login</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/Scripts/jquery-1.12.4.min.js")
+    @Scripts.Render("~/bundles/ValidationJS")
+</head>
+<body style="background:#F7F7F7;">
+    <div class="">
+        <a class="hiddenanchor" id="toregister"></a>
+        <a class="hiddenanchor" id="tologin"></a>
+        <div id="wrapper">
+            <div id="login" class="animate form">
+                <section class="login_content">
+                    @using (Html.BeginForm("Login", "Home", FormMethod.Post))
+                    {
+
+                        <h1>Login Form</h1>
+                        <div style="color:red;align-content:center">
+                            @Html.ValidationSummary(true)
+                        </div>
+                        <div>
+                            @Html.TextBoxFor(mode => mode.UserName, new { @class = "form-control", @placeholder = "Username", id = "txtUserName" })
+                            @Html.ValidationMessageFor(model => model.UserName, "", new { @style = "color:red" })
+                        </div>
+                        <div>
+                            @Html.PasswordFor(mode => mode.Password, new { @class = "form-control", @placeholder = "Password", id = "txtPassword" })
+                            @Html.ValidationMessageFor(model => model.Password, "", new { @style = "color:red" })
+                        </div>
+                        <div>
+                            <input type="submit" value="Log In" name="btnLogIn" id="btnLogIn" class="btn btn-default submit" />
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="separator">
+                            <p class="change_link">
+                                New to site?
+                                <a href="/User/Registration" class="to_register"> Create Account </a>
+                            </p>
+                            <div class="clearfix"></div>
+                            <br />
+                        </div>
+                    }
+                    <!-- form -->
+                </section>
+                <!-- content -->
+            </div>
+        </div>
+    </div>
+</body>
+</html>

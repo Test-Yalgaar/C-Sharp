@@ -1,0 +1,118 @@
+﻿@model GNM.Models.Node
+@{
+    ViewBag.Title = "Node";
+}
+
+<div class="right_col" role="main">
+    <div class="x_panel">
+        <div class="x_title">
+            <div class="page-title">
+                <div class="title_left">
+                    <h3>
+                        Gateway Master
+                    </h3>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+
+        @using (Html.BeginForm("AddEdit", "Node"))
+        {
+            <div class="row">
+                <div class="form-group">
+                    <div class="col-md-4"></div>
+                    <div class="col-md-4" style="color:red;">
+                        @Html.ValidationSummary(true)
+                        @Html.HiddenFor(model => model.NodeId)
+                    </div>
+                    <div class="col-md-4"></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <div class="control-label col-md-2 col-sm-3 col-xs-3">
+                        @Html.LabelFor(model => model.GatewayId)
+                    </div>
+                    <div class="col-md-4 col-sm-5 col-xs-5">
+                        @Html.DropDownListFor(model => model.GatewayId, @Model.GatewayList, new { id = "gatewayId", @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.GatewayId, "", new { @style = "color:red" })
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="form-group">
+                    <div class="control-label col-md-2 col-sm-3 col-xs-3">
+                        @Html.LabelFor(model => model.NodeName)
+                    </div>
+                    <div class="col-md-4 col-sm-5 col-xs-5">
+                        @Html.TextBoxFor(model => model.NodeName, new { id = "txtNodeName", @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.NodeName, "", new { @style = "color:red" })
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="item form-group">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-6">
+                        <input type="submit" name="btnSubmit" id="btnSubmit" value="Save" class="btn btn-success submit">
+                        <input type="button" name="btnCancel" id="btnCancel" value="Cancel" class="btn btn-primary submit">
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+@section scripts {
+    <script type="text/javascript">
+        $('#btnCancel').click(function () {
+            window.location.href = "/Node/Index";
+        });
+
+        var ylg = false;
+        $(document).ready(function () {
+            var clientKey = '@System.Configuration.ConfigurationManager.AppSettings["YalgaarClientKey"].ToString()'
+            ConnectToYalgaar({
+                ClientKey: clientKey,
+                SSL: false,
+                Callback: function (acknowledgment) {
+                    ylg = true;
+                    SubMessage("gateway");
+                },
+                Error: function (err) {
+                    console.log(err);
+                }
+            });
+        });
+        function SubMessage(channelname) {
+            if (ylg) {
+                SubscribeMessage({
+                    ChannelName: channelname,
+                    Callback: function (message, acknowledgment) {
+                        if (message != "") {
+                            var data = JSON.parse(message);
+                            if (data.type == "Gateway") {
+                                if (data.action == "Inserted") {
+                                    $('#gatewayId').append($('<option>', {
+                                        value: data.gatewayId,
+                                        text: data.gatewayname,
+                                    }));
+                                }
+                                else if (data.action == "Updated") {
+                                    $("#gatewayId option[value='" + data.gatewayId.toString() + "']").text(data.gatewayname);
+                                }
+                                else if (data.action == "Deleted") {
+                                    $("#gatewayId option[value='" + data.gatewayId.toString() + "']").remove();
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            else {
+                Console.log("First Connect to Yalgaar");
+            }
+        }
+    </script>
+}

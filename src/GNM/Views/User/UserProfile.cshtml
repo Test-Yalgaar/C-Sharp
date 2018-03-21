@@ -1,0 +1,182 @@
+﻿@model GNM.Models.User
+@{
+    //Layout = null;
+    ViewBag.Title = "User Profile";
+}
+@section AddToHead {
+<link href="~/Content/admin/intlTelInput.css" rel="stylesheet" />
+    <style type="text/css">
+        .intl-tel-input.allow-dropdown input, .intl-tel-input.allow-dropdown input[type=text], .intl-tel-input.allow-dropdown input[type=tel], .intl-tel-input.separate-dial-code input, .intl-tel-input.separate-dial-code input[type=text], .intl-tel-input.separate-dial-code input[type=tel] {
+            padding-right: 38px;
+            padding-left: 52px;
+            margin-left: 0;
+        }
+    </style>
+
+}
+
+<div class="right_col" role="main">
+    <div class="x_panel">
+        <div class="x_title">
+            <div class="page-title">
+                <div class="title_left">
+                    <h3>
+                        User Profile
+                    </h3>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+
+        @using (Html.BeginForm("EditUser", "User"))
+        {
+            <div class="row">
+                <div class="form-group">
+                    <div class="col-md-4"></div>
+                    <div class="col-md-4" style="color:red;">
+                        @Html.ValidationSummary(true)
+                        <span id="error-msg" class="hide" style="color:red;">Invalid Contact No.</span>
+                    </div>
+                    <div class="col- md-2 alignright">
+                        <a href="/Home/ChangePassword" class="btn btn-success submi">Change Password</a>
+                    </div>
+                    <div class="col-md-2"></div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="form-group">
+                    <div class="control-label col-md-2 col-sm-3 col-xs-3">
+                        @Html.LabelFor(model => model.Name)
+                    </div>
+                    <div class="col-md-2">
+                        @Html.TextBoxFor(model => model.Name, new { @class = "form-control", id = "txtName" })
+                        @Html.ValidationMessageFor(x => x.Name, "", new { @style = "color:red" })
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="form-group">
+                    <div class="control-label col-md-2 col-sm-3 col-xs-3">
+                        @Html.LabelFor(model => model.UserName)
+                    </div>
+                    <div class="col-md-2">
+                        @Html.TextBoxFor(model => model.UserName, new { @class = "form-control", id = "txtUserName", @readonly = "readonly" })
+                        @Html.ValidationMessageFor(x => x.UserName, "", new { @style = "color:red" })
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="form-group">
+                    <div class="control-label col-md-2 col-sm-3 col-xs-3">
+                        @Html.LabelFor(model => model.EmailAddress)
+                    </div>
+                    <div class="col-md-2">
+                        @Html.TextBoxFor(model => model.EmailAddress, new { @class = "form-control", id = "txtEmailAddress" })
+                        @Html.ValidationMessageFor(x => x.EmailAddress, "", new { @style = "color:red" })
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="form-group">
+                    <div class="control-label col-md-2 col-sm-3 col-xs-3">
+                        @Html.LabelFor(model => model.ContactNo)
+                    </div>
+                    <div class="col-md-2">
+                        @Html.TextBoxFor(model => model.ContactNo, new { id = "txtContactNo", @type = "tel", @placeholder = "", maxlength = 15, @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.ContactNo, "", new { @style = "color:red" })
+                        @*<span id="valid-msg" class="hide" style="color:green;">✓ Valid</span>*@
+                        @*<span id="error-msg" class="hide" style="color:red;">Invalid number</span>*@
+                    </div>
+                </div>
+            </div>
+
+            <div class="clearfix"></div>
+            <br />
+            <div class="row">
+                <div class="item form-group">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-6">
+                        <input type="submit" name="btnSubmit" id="btnSubmit" value="Save" class="btn btn-success submit">
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+</div>
+@section scripts {
+    <script type="text/javascript">
+        $('#btnSubmit').click(function () {
+            if ($('#txtContactNo').val().trim() != "") {
+                var intlNumber = telInput.intlTelInput("getNumber");
+                reset();
+                if ($.trim(telInput.val())) {
+                    if (telInput.intlTelInput("isValidNumber")) {
+                        validMsg.removeClass("hide");
+                        if (intlNumber) {
+                            //output.text("International: " + intlNumber);
+                            $('#txtContactNo').val(intlNumber);
+                            return true;
+                        }
+                    } else {
+                        telInput.addClass("error");
+                        errorMsg.removeClass("hide");
+                        return false;
+                    }
+                }
+            }
+        });
+        $("#txtContactNo").intlTelInput({
+            formatOnDisplay: true,
+            separateDialCode: false,
+            nationalMode: true,
+            autoPlaceholder: "aggressive",
+            customPlaceholder: null,
+            placeholderNumberType: "MOBILE",
+            geoIpLookup: function (callback) {
+                $.get('http://ipinfo.io', function () { }, "jsonp").always(function (resp) {
+                    var countryCode = (resp && resp.country) ? resp.country : "";
+                    callback(countryCode);
+                });
+            },
+            utilsScript: "../../Content/admin/js/utils.js",
+
+        });
+        var telInput = $("#txtContactNo"),
+      errorMsg = $("#error-msg"),
+      validMsg = $("#valid-msg");
+
+        // initialise plugin
+        telInput.intlTelInput({
+            utilsScript: "../../Content/admin/js/utils.js",
+        });
+        var reset = function () {
+            telInput.removeClass("error");
+            errorMsg.addClass("hide");
+            //validMsg.addClass("hide");
+        };
+        telInput.blur(function () {
+            reset();
+            if ($.trim(telInput.val())) {
+                if (telInput.intlTelInput("isValidNumber")) {
+                    // validMsg.removeClass("hide");
+                    return false;
+                } else {
+                    telInput.addClass("error");
+                    errorMsg.removeClass("hide");
+                }
+            }
+        });
+        $('#txtContactNo').keypress(function (evt) {
+            var charCode = (evt.which) ? evt.which : event.keyCode
+            if (charCode != 43 && charCode > 31 && (charCode < 48 || charCode > 57))
+                return false;
+            return true;
+        });
+
+    </script>
+}

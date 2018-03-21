@@ -1,0 +1,156 @@
+﻿@model GNM.Models.User
+@using CaptchaMvc.HtmlHelpers
+@using CaptchaMvc;
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Registration</title>
+
+    @Styles.Render("~/Content/css")
+    <link href="~/Content/admin/intlTelInput.css" rel="stylesheet" />
+      
+    @Scripts.Render("~/Content/admin/js/jquery.min.js")
+    @Scripts.Render("~/bundles/ValidationJS")
+    @Scripts.Render("~/Content/admin/js/intlTelInput.js")
+
+</head>
+<body style="background:#F7F7F7;">
+
+    <div class="">
+        <div id="wrapper">
+            <div id="login" class="animate form">
+
+                <section class="login_content">
+                    @using (Html.BeginForm("Registration", "User"))
+                    {
+
+                        <h1>Create Account</h1>
+                        <div class="row">
+                            <div class="form-group center">
+                                <div class="col-md-1"></div>
+                                <div class="col-md-10" style="color:red;">
+                                    @Html.ValidationSummary(true)
+                                    <span id="error-msg" class="hide" style="color:red;">Invalid Contact No.</span>
+                                </div>
+                                <div class="col-md-1"></div>
+                            </div>
+                        </div>
+                        <div>
+                            @Html.TextBoxFor(model => model.Name, new { @class = "form-control", @placeholder = "Name", id = "txtName" })
+                            @Html.ValidationMessageFor(x => x.Name, "", new { @style = "color:red" })
+                        </div>
+                        <div>
+                            @Html.TextBoxFor(model => model.UserName, new { @class = "form-control", @placeholder = "Username", id = "txtUserName" })
+                            @Html.ValidationMessageFor(x => x.UserName, "", new { @style = "color:red" })
+                        </div>
+                        <div>
+                            @Html.PasswordFor(model => model.Password, new { @class = "form-control", @placeholder = "Password", id = "txtPassword" })
+                            @Html.ValidationMessageFor(x => x.Password, "", new { @style = "color:red" })
+                        </div>
+                        <div>
+                            @Html.TextBoxFor(model => model.EmailAddress, new { @class = "form-control", @placeholder = "Emai Address", id = "txtEmailAddress" })
+                            @Html.ValidationMessageFor(x => x.EmailAddress, "", new { @style = "color:red" })
+                        </div>
+                        <div style="">
+                            @Html.TextBoxFor(model => model.ContactNo, new { id = "txtContactNo", @type = "tel", @placeholder = "", maxlength = 15, @class = "form-control", @style = "width:350px;padding-right:93px;" })
+                            @Html.ValidationMessageFor(x => x.ContactNo, "", new { @style = "color:red" })
+                        </div>
+                        <div>
+                            @Html.Captcha(3)
+                        </div>
+                        <div>
+                            <input type="submit" value="Submit" id="btnSave" class="btn btn-default submit" />
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="separator">
+                            <p class="change_link">
+                                Already a member ?
+                                <a href="/Home/Login" class="to_register"> Log in </a>
+                            </p>
+                            <div class="clearfix"></div>
+                            <br />
+                        </div>
+                    }
+                    <!-- form -->
+                </section>
+                <!-- content -->
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script type="text/javascript">
+    $('#txtContactNo').keypress(function (evt) {
+        var charCode = (evt.which) ? evt.which : event.keyCode
+        if (charCode != 43 && charCode > 31 && (charCode < 48 || charCode > 57))
+            return false;
+        return true;
+    });
+
+    $('#btnSave').click(function (evt) {
+        if ($('#txtContactNo').val().trim() != "") {
+            var intlNumber = telInput.intlTelInput("getNumber");
+            reset();
+            if ($.trim(telInput.val())) {
+                if (telInput.intlTelInput("isValidNumber")) {
+                    // validMsg.removeClass("hide");
+                    if (intlNumber) {
+                        $('#txtContactNo').val(intlNumber);
+                    }
+                } else {
+                    telInput.addClass("error");
+                    errorMsg.removeClass("hide");
+                    return false;
+                }
+            }
+        } 
+    });
+</script>
+<script type="text/javascript">
+    $("#txtContactNo").intlTelInput({
+        formatOnDisplay: true,
+        separateDialCode: false,
+        nationalMode: true,
+        autoPlaceholder: "aggressive",
+        customPlaceholder: null,
+        placeholderNumberType: "MOBILE",
+        preferredCountries: ["us", "in"],
+        geoIpLookup: function (callback) {
+            $.get('http://ipinfo.io', function () { }, "jsonp").always(function (resp) {
+                var countryCode = (resp && resp.country) ? resp.country : "";
+                callback(countryCode);
+            });
+        },
+        utilsScript: "../../Content/admin/js/utils.js",
+    });
+    var telInput = $("#txtContactNo"),
+  errorMsg = $("#error-msg");
+
+    // initialise plugin
+    telInput.intlTelInput({
+        utilsScript: "../../Content/admin/js/utils.js",
+    });
+    var reset = function () {
+        telInput.removeClass("error");
+        errorMsg.addClass("hide");
+        //validMsg.addClass("hide");
+    };
+    telInput.blur(function () {
+        reset();
+        if ($.trim(telInput.val())) {
+            if (telInput.intlTelInput("isValidNumber")) {
+                // validMsg.removeClass("hide");
+                return false;
+            } else {
+                telInput.addClass("error");
+                errorMsg.removeClass("hide");
+            }
+        }
+    });
+</script>
