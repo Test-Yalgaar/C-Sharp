@@ -92,7 +92,7 @@
             this.txt_UUID.Name = "txt_UUID";
             this.txt_UUID.Size = new System.Drawing.Size(169, 25);
             this.txt_UUID.TabIndex = 4;
-            this.txt_UUID.Text = "abc";
+            this.txt_UUID.Text = "YalgaarUUID";
             // 
             // txt_Channel
             // 
@@ -205,7 +205,7 @@
             this.label2.TabIndex = 27;
             this.label2.Text = "Message :";
             // 
-            // Frm_Yalgaar_DotNet_SDK_Test
+            // YalgaarWinFormExample
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -226,7 +226,7 @@
             this.Controls.Add(this.btn_Publish);
             this.Controls.Add(this.txt_MsgSend);
             this.Controls.Add(this.btn_Connect);
-            this.Name = "Frm_Yalgaar_DotNet_SDK_Test";
+            this.Name = "YalgaarWinFormExample";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Yalgaar";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Frm_Yalgaar_DotNet_SDK_Test_FormClosing);
