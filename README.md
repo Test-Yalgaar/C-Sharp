@@ -4,6 +4,7 @@ Create amazing realtime applications easily with Yalgaar .Net SDK
 ## Description
 * c# sdk support .Net Framework 4.5 and above 
 * Use master branch for get latest SDK
+* For making connection to MQTT server in c-sharp we are using [M2MQTT](https://github.com/eclipse/paho.mqtt.m2mqtt) Client Library
 
 ## Usage
 For use Yalgaar c# SDK refer [Document](https://www.yalgaar.io/documentation/net-api)
